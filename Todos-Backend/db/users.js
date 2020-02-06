@@ -2,7 +2,7 @@ const { db, errors } = require('./pgp');
 
 const createUser = async (user) => {
   try {
-    let insertQuery = `INSERT INTO users(username) VALUES($/username/) RETURNING *`;
+    let insertQuery = `INSERT INTO users(username, password_serie) VALUES($/username/, $/password_serie/) RETURNING id, username`;
     let newUser = await db.one(insertQuery, user)
     return newUser;
   } catch (err) {

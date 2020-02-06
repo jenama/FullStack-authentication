@@ -1,13 +1,16 @@
 let express = require('express');
 let router = express.Router();
 let { Users } = require('../db');
+let authHelper = require('../authentication/helper')
 
 router.post("/signup", async (req, res, next) => {
   const { username } = req.body;
 
   try {
+    const passwordSerie = await authHelper.hashPassword(req.body.password)
     let user = {
       username,
+      password_serie: passwordSerie
     };
 
     let registeredUser = await Users.createUser(user);

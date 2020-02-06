@@ -1,13 +1,13 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cors = require('cors');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const cors = require('cors');
 
-var indexRouter = require('./routes/index');
-var authRouter = require('./routes/auth');
-var todosRouter = require('./routes/todos');
+const indexRouter = require('./routes/index');
+const authRouter = require('./routes/auth');
+const todosRouter = require('./routes/todos');
 
-var app = express();
+const app = express();
 
 app.use(cors());
 app.use(logger('dev'));
