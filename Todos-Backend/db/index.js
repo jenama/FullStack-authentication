@@ -1,7 +1,7 @@
-const Users = require('./users');
+const userQueries = require('./users');
 const Todos = require('./todos');
 
 module.exports = {
-  Users,
+  userQueries,
   Todos,
 }

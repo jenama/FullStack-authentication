@@ -5,8 +5,8 @@ CREATE DATABASE todos_api_db;
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  username VARCHAR UNIQUE NOT NULL, 
-  password_serie VARCHAR NOT NULL
+  username VARCHAR NOT NULL UNIQUE, 
+  password_digest VARCHAR NOT NULL
 );
 
 CREATE TABLE todos (

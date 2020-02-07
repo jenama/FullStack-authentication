@@ -1,20 +1,21 @@
-let express = require('express');
-let router = express.Router();
-let { Users } = require('../db');
-let authHelper = require('../authentication/helper')
+const express = require('express');
+const router = express.Router();
+const userQueries  = require('../db/users');
+const authHelpers = require('../authentication/helper')
+const passport = require('../authentication/passport')
 
 router.post("/signup", async (req, res, next) => {
-  const { username } = req.body;
-
   try {
-    const passwordSerie = await authHelper.hashPassword(req.body.password)
+    const passwordDigest = await authHelpers.hashPassword(req.body.password)
+  
     let user = {
-      username,
-      password_serie: passwordSerie
+      username: req.body.username,
+      password_digest: passwordDigest
     };
-
-    let registeredUser = await Users.createUser(user);
-
+   
+    
+    let registeredUser = await userQueries.createUser(user);
+    console.log('registered user')
     res.status(201).json({
       payload: {
         user: registeredUser,
@@ -35,6 +36,24 @@ router.post("/signup", async (req, res, next) => {
       next(err);
     }
   }
+})
+
+router.post("/login", passport.authenticate('local'), (req, res, next) => {
+  console.log(req.body)
+  res.json({
+    payload: req.user,
+    msg: "The user has been successfully logged in",
+    err: false
+  })
+})
+
+router.get("/logout", (req, res, next) => {
+  req.logOut()
+  res.json({
+    payload: null,
+    msg: "The user has been logged out successfully",
+    err: false
+  })
 })
 
 module.exports = router;

@@ -1,10 +1,15 @@
-const { db, errors } = require('./pgp');
+const  db = require('./pgp');
+// const authHelpers = require('../authentication/helper');
 
 const createUser = async (user) => {
+  // console.log('user from user.js', user)
   try {
-    let insertQuery = `INSERT INTO users(username, password_serie) VALUES($/username/, $/password_serie/) RETURNING id, username`;
-    let newUser = await db.one(insertQuery, user)
-    return newUser;
+    let insertQuery = `INSERT INTO users(username, password_digest) 
+                        VALUES($1, $2) 
+                        RETURNING id, username`;
+    let registeredUser = await db.one(insertQuery, [user.username, user.password_digest])
+      console.log('new user', registeredUser)
+    return registeredUser;
   } catch (err) {
     // Username already taken 
     if (err.code === "23505" && err.detail.includes("already exists")) {
@@ -16,7 +21,7 @@ const createUser = async (user) => {
 
 const getUserByUsername = async (username) => {
   try {
-    let user = await db.one('SELECT * FROM users WHERE username = $/username/', {
+    let user = await db.oneOrNone('SELECT * FROM users WHERE username = $/username/', {
       username
     });
     return user;

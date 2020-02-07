@@ -1,12 +1,25 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const userQueries = require('../db/users')
+const { loginRequired } = require('../authentication/helper')
 
-router.get('/', function (req, res, next) {
-  res.json({
-    payload: "Welcome. Read the Docs before starting. There should be a README at the root directory of this project.",
-    err: false
-  })
-});
+router.get('/', loginRequired, async(req, res, next) => {
+  try {
+    let users = await userQueries.getAll()
+    res.json({
+      payload: users,
+      msg: "All users were successfully retrieved",
+      err: false
+    })
+  } catch (err) {
+    res.status(500).json({
+      payload: null,
+      msg: "Failed to get all users",
+      err: true
+    })
+  }
+  
+}) 
 
 router.all('/', (req, res, next) => {
   res.status(405).json({
